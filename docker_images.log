@@ -1,9 +1,0 @@
-REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-ubuntu              latest              0458a4468cbc        7 days ago          112MB
-nginx               latest              3f8a4339aadd        5 weeks ago         108MB
-hello-world         latest              f2a91732366c        2 months ago        1.85kB
-
-
-Команда docker inspect <container_id>
-
-Команда docker inspect <image_id>
