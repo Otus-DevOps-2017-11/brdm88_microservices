@@ -1,5 +1,21 @@
-﻿# brdm88_microservices
+# brdm88_microservices
 Dmitry Bredikhin microservice technology study repository
+
+Homework-15
+===========
+
+##### Общие сведения.
+
+Предварительно на рабочую машину была установлена docker-machine версии 0.14.0.
+Создана конфигурация для сборки docker-образа для приложения reddit. Произведена сборка образа при помощи `docker build`, а также его загрузка 
+в репозиторий на **Dcoker Hub**.
+
+Скрипты создания хоста docker-machine и правила файервола для Puma находятся в директории **config-scripts**.
+Dockerfile и сопутствующие файлы конфигурации для создания образа находаятся в директории **build-reddit-image**.
+
+
+----
+----
 
 
 
