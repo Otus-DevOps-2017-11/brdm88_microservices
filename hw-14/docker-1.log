@@ -1,4 +1,4 @@
-﻿# docker images command output
+# docker images command output
 
 REPOSITORY               TAG                 IMAGE ID            CREATED              SIZE
 brdm88/ubuntu-tmp-file   latest              fbf726ba65e3        About a minute ago   112MB
