@@ -1,16 +1,23 @@
-﻿FROM ruby:2.2
+# Comment service Dockerfile
 
-RUN apt-get update -qq && apt-get install -y build-essential
+FROM alpine:latest
 
+# Install build environment and Ruby base packages && Clear apk cache
+RUN apk update \
+&& apk add ruby-dev gcc make libc-dev \
+&& apk add ruby ruby-bundler \
+&& rm -rf /var/cache/apk/*
+
+# Create and set Workdir
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
-
 WORKDIR $APP_HOME
 
-ADD Gemfile* $APP_HOME/
+# Copy App code and install dependencies
+COPY . $APP_HOME/
 RUN bundle install
-COPY . $APP_HOME
 
+# Set environment variables and startup command
 ENV COMMENT_DATABASE_HOST comment_db
 ENV COMMENT_DATABASE comments
 
