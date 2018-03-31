@@ -1,6 +1,16 @@
 # brdm88_microservices
 Dmitry Bredikhin microservice technology study repository
 
+Homework-17
+===========
+
+##### Часть 1. Сети в Docker.
+##### Часть 2. docker-compose.
+
+
+----
+----
+
 
 Homework-16
 ===========
