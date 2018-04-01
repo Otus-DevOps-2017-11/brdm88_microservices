@@ -30,3 +30,11 @@ export USERNAME=brdm88
 
 docker-compose up -d
 docker-compose ps
+docker-compose down 
+docker-compose -f docker-compose.yml up -d
+
+docker-machine scp -r ./comment/ docker-user@docker-host:~/reddit
+docker-machine scp -r ./post-py/ docker-user@docker-host:~/reddit
+docker-machine scp -r ./ui/ docker-user@docker-host:~/reddit
+
+docker-machine ssh docker-host
