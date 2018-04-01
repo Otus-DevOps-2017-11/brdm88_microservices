@@ -2,6 +2,16 @@
 Dmitry Bredikhin microservice technology study repository
 
 
+Homework-19
+===========
+
+Предварительно была создана виртуальная машина Google Compute Engine и установлен CitLab CI с использованием Omnibus.
+
+
+----
+----
+
+
 Homework-17
 ===========
 
