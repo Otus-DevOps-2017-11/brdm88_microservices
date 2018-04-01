@@ -1,0 +1,17 @@
+---
+version: '3.3'
+
+services:
+  comment:
+    volumes:
+      - /home/docker-user/reddit/comment:/app
+    command: puma --debug -w 2
+
+  ui:
+    volumes:
+      - /home/docker-user/reddit/ui:/app
+    command: puma --debug -w 2
+
+  post:
+    volumes:
+      - /home/docker-user/reddit/post-py:/app
