@@ -3,7 +3,9 @@ image: ruby:2.4.2
 stages:
   - build
   - test
-  - deploy
+  - review
+  - stage
+  - production
 
 variables:
   DATABASE_URL: 'mongodb://mongo/user_posts'
@@ -29,7 +31,33 @@ test_integration_job:
   script:
     - echo 'Integration Testing...'
 
-deploy_job:
-  stage: deploy
+deploy_dev_job:
+  stage: review
   script:
-    - echo 'Deploy...'
+    - echo 'Deploy: Dev'
+  environment:
+    name: dev
+    url: http://dev/example.com
+
+staging:
+  stage: stage
+  when: manual
+  only:
+    - /^\d+\.\d+.\d+/
+  script:
+    - echo 'Deploy: Stage'
+  environment:
+    name: stage
+    url: https://beta.example.com
+
+production:
+  stage: production
+  when: manual
+  only:
+    - /^\d+\.\d+.\d+/
+  script:
+    - echo 'Deploy: Prod'
+  environment:
+    name: production
+    url: https://example.com
+
