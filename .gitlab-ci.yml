@@ -39,7 +39,7 @@ deploy_dev_job:
     name: dev
     url: http://dev/example.com
 
-branch_review:
+branch review:
   stage: review
   script: echo "Deploy to $CI_ENVIRONMENT_SLUG"
   environment:
