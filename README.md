@@ -2,6 +2,18 @@
 Dmitry Bredikhin microservice technology study repository
 
 
+Homework-20
+===========
+
+##### Базовая часть
+
+На тестовом сервере GitLab был создан дополнительный проект и настроены окружения в CI Pipeline.
+
+
+----
+----
+
+
 Homework-19
 ===========
 
