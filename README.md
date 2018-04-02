@@ -5,8 +5,23 @@ Dmitry Bredikhin microservice technology study repository
 Homework-19
 ===========
 
+##### Базовая часть
+
 Предварительно была создана виртуальная машина Google Compute Engine и установлен GitLab CI с использованием Omnibus.
-Создана шаблонная конфигурация CI Pipeline, зарегистрирован Runner.
+Создана шаблонная конфигурация CI Pipeline, создан и зарегистрирован Runner в Docker-контейнере.
+Добавлен unit-тест для монолитной версии приложения Reddit.
+
+##### Дополнительное задание
+
+1. Автоматизация развертывания Runner-s
+
+В версии GitLab Runner 1.1.0 появился механизм **Runners autoscale configuration**. Задействуем его.
+Механизм основан на использовании Docker-Machine.
+
+2. Интеграция с чатом Slack
+
+Добавлены нотификации о коммитах в репозиторий и об изменениях в CI Pipeline в канал #dmitry-bredikhin чата DevOps Team Otus.
+
 
 ----
 ----
