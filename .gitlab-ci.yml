@@ -16,8 +16,11 @@ before_script:
 
 build_job:
   stage: build
+  services:
+    docker:dind
   script:
-    - echo 'Building...'
+    - echo 'Building Reddit monolith App...'
+    - docker build -t "reddit:${CI_COMMIT_REF_SLUG}" ./reddit
 
 test_unit_job:
   stage: test
