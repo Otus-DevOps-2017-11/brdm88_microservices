@@ -1,5 +1,8 @@
 image: ruby:2.4.2
 
+services:
+  - docker:dind
+
 stages:
   - build
   - test
@@ -16,8 +19,6 @@ before_script:
 
 build_job:
   stage: build
-  services:
-    - docker:dind
   script:
     - echo 'Building Reddit monolith App...'
     - docker build -t "reddit:${CI_COMMIT_REF_SLUG}" ./reddit
