@@ -1,0 +1,37 @@
+concurrent = 5   # All registered Runners can run up to 50 concurrent jobs
+
+[[runners]]
+  url = "http://35.189.107.99"
+  token = "RUNNER_TOKEN"             # Note this is different from the registration token used by `gitlab-runner register`
+  name = "autoscale-runner"
+  executor = "docker+machine"        # This Runner is using the 'docker+machine' executor
+  limit = 10                         # This Runner can execute up to 10 jobs (created machines)
+  [runners.docker]
+    image = "alpine:latest"               
+    tls_verify = false
+    privileged = false
+    disable_cache = false
+    volumes = ["/cache"]
+    shm_size = 0
+  [runners.machine]
+    IdleCount = 0                    # There must be 5 machines in Idle state - when Off Peak time mode is off
+    IdleTime = 180                   # Each machine can be in Idle state up to 600 seconds (after this it will be removed) - when Off Peak time mode is off
+    MaxBuilds = 100                  # Each machine can handle up to 100 jobs in a row (after this it will be removed)
+    MachineName = "runner-autoscale-%s"    # Each machine will have a unique name ('%s' is required)
+    MachineDriver = "google"   # Docker Machine is using the 'google' driver
+    MachineOptions = [
+        "google-project=Docker-194323",
+        "google-machine-image=ubuntu-os-cloud/global/images/ubuntu-1604-xenial-v20180126",
+        "google-machine-type=g1-small",
+        "google-zone=europe-weat2-a",
+        "google-tags=default-allow-ssh",
+        "google-use-internal-ip=true",
+        "engine-registry-mirror=http://10.11.12.13:12345"   # Docker Machine is using registry mirroring
+    ]
+  [runners.cache]
+    Type = "s3"   # The Runner is using a distributed cache with Amazon S3 service
+    ServerAddress = "35.189.107.99:9005"
+    AccessKey = "UGJNFYK4TJKHR9XYCPNO"
+    SecretKey = "yj5ZJJbeSWEdhAf9kyOc13SCtg3aCTODIIjjqrUo"
+    BucketName = "runner"
+    Insecure = false

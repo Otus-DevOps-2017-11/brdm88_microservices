@@ -18,6 +18,7 @@ Homework-19
 В версии GitLab Runner 1.1.0 появился механизм **Runners autoscale configuration**. Задействуем его.
 Механизм основан на использовании Docker-Machine.
 
+
 2. Интеграция с чатом Slack
 
 Добавлены нотификации о коммитах в репозиторий и об изменениях в CI Pipeline в канал #dmitry-bredikhin чата DevOps Team Otus.
