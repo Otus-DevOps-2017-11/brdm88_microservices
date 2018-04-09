@@ -25,10 +25,86 @@ Homework-19
 
 ##### Дополнительное задание
 
+
 1. Автоматизация развертывания Runner-s
 
 В версии GitLab Runner 1.1.0 появился механизм **Runners autoscale configuration**. Задействуем его.
-Механизм основан на использовании Docker-Machine.
+Конфигурация проводилась в соответствии с рекомендациями в документации GitLab: https://docs.gitlab.com/runner/configuration/autoscale.html
+Механизм основан на использовании Docker-Machine для управления инстансами runner-ов.
+
+Предварительно на машине с GitLab были настроены container registry и cache server, затем запущен и зарегистрирован runner, при этом в качестве 
+executor указан `docker+machine`. Для использования docker-machine в среде GCE при создании runner были указаны данные сервисного аккаунта GCP 
+в формате JSON.
+
+```
+# Create container registry
+docker run -d -p 6000:5000 \
+    -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io \
+    --restart always \
+    --name registry registry:2
+
+# Create cache server
+docker run -it --restart always -p 9005:9000 \
+    -v /.minio:/root/.minio \
+    -v /export:/export \
+    --name minio \
+    minio/minio:latest server /export
+
+# Run Docker container from image (for using with docker-machine)
+docker run -d --name gitlab-runner --restart always \
+    -e GOOGLE_APPLICATION_CREDENTIALS=/etc/gitlab-runner/gce-docker.json \
+    -v /srv/gitlab-runner/config:/etc/gitlab-runner \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    gitlab/gitlab-runner:latest
+```
+
+Заданы следующие параметры конфигурации runner-a (файл `config.toml`):
+```
+# config.toml file contents
+concurrent = 5
+check_interval = 0
+
+[[runners]]
+  name = "brdm88-autoscale-runner"
+  url = "http://<gitlab_ip>"
+  token = "<runner_token>"
+  executor = "docker+machine"
+  limit = 10
+  [runners.docker]
+    tls_verify = false
+    image = "alpine:latest"
+    privileged = false
+    disable_cache = false
+    volumes = ["/cache"]
+    shm_size = 0
+  [runners.cache]
+    type = "s3"
+    ServerAddress = "gitlab_ip:9005"
+    AccessKey = "<cache_server_access_key>"
+    SecretKey = "cache_server_secret_key"
+    BucketName = "runner"
+    Insecure = true
+  [runners.machine]
+    IdleCount = 0
+    IdleTime = 60
+    MachineDriver = "google"
+    MachineName = "runner-autoscale-%s"
+    MachineOptions = [
+      "google-project=docker-194323",
+      "google-machine-type=g1-small",
+      "google-machine-image=ubuntu-os-cloud/global/images/ubuntu-1604-xenial-v20180405",
+      "google-tags=default-allow-ssh",
+      "google-zone=europe-west2-a",
+      "google-use-internal-ip=true"
+    ]
+    OffPeakTimezone = ""
+    OffPeakIdleCount = 0
+    OffPeakIdleTime = 0
+
+```
+В качестве MachineDriver-а задан Google Compute Engine и текущий проект. После этого runner перезапущен с новой конфигурацией.
+В рамках данной задачи для наглядности параметр `IdleCount` задан в 0, чтобы runner-ы стартовали и уничтожались непосредственно под job-ы.
+
 
 2. Интеграция с чатом Slack
 
