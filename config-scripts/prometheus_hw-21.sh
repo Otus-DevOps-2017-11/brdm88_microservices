@@ -19,3 +19,7 @@ docker run --rm -p 9090:9090 -d --name prometheus  prom/prometheus
 docker-machine ip vm1
 
 docker stop prometheus
+
+
+export USER_NAME=brdm88
+docker build -t $USER_NAME/prometheus .
