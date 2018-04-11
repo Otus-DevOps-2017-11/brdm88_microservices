@@ -2,8 +2,9 @@
 version: '3.3'
 
 services:
+# Application
   mongo_db:
-    image: mongo:${MONGO_VERSION}
+    image: mongo:${MONGO_VERSION:-latest}
     volumes:
       - posts_db:/data/db
     networks:
@@ -13,29 +14,27 @@ services:
           - comment_db
 
   ui:
-    #build: ./ui
-    image: ${USERNAME}/ui:${UI_VERSION}
+    image: ${USERNAME}/ui:${UI_VERSION:-latest}
     ports:
       - ${PUBLIC_HTTP_PORT}:9292/tcp
     networks:
       - net_frontend
 
   post:
-    #build: ./post-py
-    image: ${USERNAME}/post:${POST_VERSION}
+    image: ${USERNAME}/post:${POST_VERSION:-latest}
     networks:
       - net_frontend
       - net_backend
 
   comment:
-    #build: ./comment
-    image: ${USERNAME}/comment:${COMMENT_VERSION}
+    image: ${USERNAME}/comment:${COMMENT_VERSION:-latest}
     networks:
       - net_frontend
       - net_backend
 
+  # Monitoring
   prometheus:
-    image: ${USERNAME}/prometheus
+    image: ${USERNAME}/prometheus:${PROMETHEUS_VERSION:-latest}
     ports:
       - '9090:9090'
     volumes:
@@ -48,6 +47,31 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention=1d'
 
+  node-exporter:
+    image: prom/node-exporter:${NODE_EXPORTER_VERSION:-latest}
+    user: root
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - net_backend
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+
+  mongodb-exporter:
+    image: ${USERNAME}/mongodb-exporter:${MONGODB_EXPORTER_VERSION:-latest}
+    networks:
+      - net_backend
+    command: ["-mongodb.uri", "post_db"]
+  
+  blackbox-exporter:
+    image: prom/blackbox-exporter:${BLACKBOX_EXPORTER_VERSION:-latest}
+    networks:
+      - net_frontend
+  
 volumes:
   posts_db:
   prometheus_data:

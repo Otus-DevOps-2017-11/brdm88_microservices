@@ -24,4 +24,5 @@ docker stop prometheus
 export USER_NAME=brdm88
 docker build -t $USER_NAME/prometheus .
 
+# Build microservices images
 for srv in ui comment post-py; do cd src/$srv; bash docker_build.sh; cd -; done
