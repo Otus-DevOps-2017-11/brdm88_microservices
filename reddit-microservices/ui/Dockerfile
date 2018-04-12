@@ -1,16 +1,16 @@
 # UI service Dockerfile
 
-FROM alpine:latest
+FROM alpine:3.7
 
 # Install build environment and Ruby base packages && Clear apk cache
 RUN apk update \
-&& apk add gcc make libc-dev ruby-dev g++\
+&& apk add ruby-dev gcc make libc-dev g++ \
 && apk add ruby ruby-bundler \
 && rm -rf /var/cache/apk/*
 
 # Create and set Workdir
 ENV APP_HOME /app
-RUN mkdir $APP_HOME
+RUN mkdir $"APP_HOME"
 WORKDIR $APP_HOME
 
 # Copy App code and install dependencies
