@@ -2,6 +2,14 @@
 Dmitry Bredikhin microservice technology study repository
 
 
+Homework-25
+===========
+
+
+----
+----
+
+
 Homework-23
 ===========
 
