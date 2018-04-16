@@ -26,3 +26,10 @@ docker build -t $USER_NAME/prometheus .
 
 # Build microservices images
 for srv in ui comment post-py; do cd src/$srv; bash docker_build.sh; cd -; done
+
+docker-compose down --remove-orphans
+
+curl -X POST -H 'Content-type: application/json' \
+--data '{"text":"Webhook Test"}' \
+ https://hooks.slack.com/services/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
+

@@ -1,0 +1,17 @@
+global:
+  slack_api_url: 'https://hooks.slack.com/services/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'
+  smtp_from: 'alert@thebrdm.info'
+  smtp_smarthost: 'smtp.yandex.com:465'
+  smtp_auth_username: 'alert@thebrdm.info'
+  smtp_auth_identity: 'alert@thebrdm.info'
+  smtp_auth_password: 'AlertPas$777'
+
+route:
+  receiver: 'alert-notifications'
+
+receivers:
+- name: 'alert-notifications'
+  slack_configs:
+  - channel: '#dmitry-bredikhin'
+  email_configs:
+  - to: brdm88@gmail.com
