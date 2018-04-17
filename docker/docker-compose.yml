@@ -19,9 +19,21 @@ services:
       - ${PUBLIC_HTTP_PORT}:9292/tcp
     networks:
       - net_frontend
-
+  
   post:
     image: ${USERNAME}/post:${POST_VERSION:-latest}
+    environment:
+      - POST_DATABASE_HOST=post_db
+      - POST_DATABASE=posts
+    depends_on:
+      - mongo_db
+    ports:
+      - "5000:5000"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: service.post
     networks:
       - net_frontend
       - net_backend
