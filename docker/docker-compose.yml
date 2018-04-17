@@ -1,0 +1,92 @@
+---
+version: '3.3'
+
+services:
+# Application
+  mongo_db:
+    image: mongo:${MONGO_VERSION:-latest}
+    volumes:
+      - posts_db:/data/db
+    networks:
+      net_backend:
+        aliases:
+          - post_db
+          - comment_db
+
+  ui:
+    image: ${USERNAME}/ui:${UI_VERSION:-latest}
+    ports:
+      - ${PUBLIC_HTTP_PORT}:9292/tcp
+    networks:
+      - net_frontend
+
+  post:
+    image: ${USERNAME}/post:${POST_VERSION:-latest}
+    networks:
+      - net_frontend
+      - net_backend
+
+  comment:
+    image: ${USERNAME}/comment:${COMMENT_VERSION:-latest}
+    networks:
+      - net_frontend
+      - net_backend
+
+  # Monitoring
+  prometheus:
+    image: ${USERNAME}/prometheus:${PROMETHEUS_VERSION:-latest}
+    ports:
+      - '9090:9090'
+    volumes:
+      - prometheus_data:/prometheus
+    networks:
+      - net_frontend
+      - net_backend
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=1d'
+
+  node-exporter:
+    image: prom/node-exporter:${NODE_EXPORTER_VERSION:-latest}
+    user: root
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - net_backend
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+
+  mongodb-exporter:
+    image: ${USERNAME}/mongodb-exporter:${MONGODB_EXPORTER_VERSION:-latest}
+    networks:
+      - net_backend
+    command: ["-mongodb.uri", "post_db"]
+  
+  blackbox-exporter:
+    image: prom/blackbox-exporter:${BLACKBOX_EXPORTER_VERSION:-latest}
+    networks:
+      - net_frontend
+  
+volumes:
+  posts_db:
+  prometheus_data:
+
+networks:
+  net_frontend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.1.1.0/24
+
+  net_backend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.1.2.0/24

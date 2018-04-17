@@ -1,5 +1,6 @@
+## prometheus
 build_info.txt
-prometheus/
+#prometheus/
 
 ## python specific
 *.pyc

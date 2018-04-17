@@ -15,6 +15,7 @@ WORKDIR $BUILD_HOME
 COPY Gemfile* $BUILD_HOME
 RUN bundle install
 
+
 ## Prod run stage
 FROM alpine:3.7
 
