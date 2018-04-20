@@ -7,6 +7,8 @@ services:
     ports:
       - "24224:24224"
       - "24224:24224/udp"
+    networks:
+      - net_frontend
 
   elasticsearch:
     image: elasticsearch
@@ -14,8 +16,24 @@ services:
       - 9200
     ports:
       - "9200:9200"
+    networks:
+      - net_frontend
 
   kibana:
     image: kibana
     ports:
       - "5601:5601"
+    networks:
+      - net_frontend
+  
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - net_frontend
+      - net_backend
+
+networks:
+  net_frontend:
+  net_backend:

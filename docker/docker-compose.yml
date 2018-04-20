@@ -17,6 +17,11 @@ services:
     image: ${USERNAME}/ui:${UI_VERSION:-latest}
     ports:
       - ${PUBLIC_HTTP_PORT}:9292/tcp
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: service.ui
     networks:
       - net_frontend
   
