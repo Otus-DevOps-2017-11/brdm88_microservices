@@ -2,6 +2,15 @@
 Dmitry Bredikhin microservice technology study repository
 
 
+Homework-28
+===========
+
+В рамках данной работы были выполнены задания туториала "Kubernetes The Hard way". 
+Файлы, созданные при прохождении туториала, помещены в папку `kubernetes/kubernetes_the_hard_way`.
+
+----
+----
+
 
 Homework-27
 ===========
@@ -30,7 +39,6 @@ Homework-27
 
 ----
 ----
-
 
 
 Homework-25
