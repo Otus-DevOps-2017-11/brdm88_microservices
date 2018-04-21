@@ -26,7 +26,7 @@ BUILD_INFO = File.readlines('build_info.txt')
 
 configure do
   http_client = Faraday.new do |faraday|
-    faraday.use ZipkinTracer::FaradayHandler
+    #faraday.use ZipkinTracer::FaradayHandler
     faraday.request :url_encoded # form-encode POST params
     # faraday.response :logger
     faraday.adapter Faraday.default_adapter # make requests with Net::HTTP

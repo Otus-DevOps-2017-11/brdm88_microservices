@@ -9,7 +9,7 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson.json_util import dumps
 from helpers import http_healthcheck_handler, log_event
-from py_zipkin.zipkin import zipkin_span, ZipkinAttrs
+#from py_zipkin.zipkin import zipkin_span, ZipkinAttrs
 
 
 CONTENT_TYPE_LATEST = str('text/plain; version=0.0.4; charset=utf-8')
@@ -62,7 +62,7 @@ def metrics():
                     mimetype=CONTENT_TYPE_LATEST)
 
 # Retrieve information about all posts
-@zipkin_span(service_name='post', span_name='db_find_all_posts')
+#@zipkin_span(service_name='post', span_name='db_find_all_posts')
 def find_posts():
     try:
         posts = app.db.find().sort('created_at', -1)
@@ -79,21 +79,21 @@ def find_posts():
 
 @app.route("/posts")
 def posts():
-    with zipkin_span(
-        service_name='post',
-        zipkin_attrs=ZipkinAttrs(
-            trace_id=request.headers['X-B3-TraceID'],
-            span_id=request.headers['X-B3-SpanID'],
-            parent_span_id=request.headers['X-B3-ParentSpanID'],
-            flags=request.headers['X-B3-Flags'],
-            is_sampled=request.headers['X-B3-Sampled'],
-        ),
-        span_name='/posts',
-        transport_handler=http_transport,
-        port=5000,
-        sample_rate=100,
-    ):
-        posts = find_posts()
+    # with zipkin_span(
+        # service_name='post',
+        # zipkin_attrs=ZipkinAttrs(
+            # trace_id=request.headers['X-B3-TraceID'],
+            # span_id=request.headers['X-B3-SpanID'],
+            # parent_span_id=request.headers['X-B3-ParentSpanID'],
+            # flags=request.headers['X-B3-Flags'],
+            # is_sampled=request.headers['X-B3-Sampled'],
+        # ),
+        # span_name='/posts',
+        # transport_handler=http_transport,
+        # port=5000,
+        # sample_rate=100,
+    # ):
+    posts = find_posts()
     return posts
 
 
@@ -150,7 +150,7 @@ def add_post():
 
 
 # Retrieve information about a post
-@zipkin_span(service_name='post', span_name='db_find_single_post')
+#@zipkin_span(service_name='post', span_name='db_find_single_post')
 def find_post(id):
     start_time = time.time()
     try:
@@ -173,21 +173,21 @@ def find_post(id):
 # Find a post
 @app.route('/post/<id>')
 def get_post(id):
-    with zipkin_span(
-        service_name='post',
-        zipkin_attrs=ZipkinAttrs(
-            trace_id=request.headers['X-B3-TraceID'],
-            span_id=request.headers['X-B3-SpanID'],
-            parent_span_id=request.headers['X-B3-ParentSpanID'],
-            flags=request.headers['X-B3-Flags'],
-            is_sampled=request.headers['X-B3-Sampled'],
-        ),
-        span_name='/post/<id>',
-        transport_handler=http_transport,
-        port=5000,
-        sample_rate=100,
-    ):
-        post = find_post(id)
+    # with zipkin_span(
+        # service_name='post',
+        # zipkin_attrs=ZipkinAttrs(
+            # trace_id=request.headers['X-B3-TraceID'],
+            # span_id=request.headers['X-B3-SpanID'],
+            # parent_span_id=request.headers['X-B3-ParentSpanID'],
+            # flags=request.headers['X-B3-Flags'],
+            # is_sampled=request.headers['X-B3-Sampled'],
+        # ),
+        # span_name='/post/<id>',
+        # transport_handler=http_transport,
+        # port=5000,
+        # sample_rate=100,
+    # ):
+    post = find_post(id)
     return post
 
 

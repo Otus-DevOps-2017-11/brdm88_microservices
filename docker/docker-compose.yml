@@ -5,6 +5,10 @@ services:
 # Application
   mongo_db:
     image: mongo:${MONGO_VERSION:-latest}
+    deploy:
+      placement:
+        constraints:
+          - node.labels.reliability == high
     volumes:
       - posts_db:/data/db
     networks:
@@ -15,54 +19,83 @@ services:
 
   ui:
     image: ${USERNAME}/ui:${UI_VERSION:-latest}
+    deploy:
+      mode: replicated
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 5s
+        failure_action: pause
+      placement:
+        constraints:
+          - node.role == worker
+    depends_on:
+      - post
+      - comment
+    environment:
+      - ENV=DEV
     ports:
       - ${PUBLIC_HTTP_PORT}:9292/tcp
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: service.ui
+    # logging:
+      # driver: "fluentd"
+      # options:
+        # fluentd-address: localhost:24224
+        # tag: service.ui
     networks:
       - net_frontend
   
   post:
     image: ${USERNAME}/post:${POST_VERSION:-latest}
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints:
+          - node.role == worker
     environment:
       - POST_DATABASE_HOST=post_db
       - POST_DATABASE=posts
     depends_on:
       - mongo_db
-    ports:
-      - "5000:5000"
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: service.post
+    # ports:
+      # - "5000:5000"
+    # logging:
+      # driver: "fluentd"
+      # options:
+        # fluentd-address: localhost:24224
+        # tag: service.post
     networks:
       - net_frontend
       - net_backend
 
   comment:
     image: ${USERNAME}/comment:${COMMENT_VERSION:-latest}
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        constraints:
+          - node.role == worker
+    depends_on:
+      - mongo_db
     networks:
       - net_frontend
       - net_backend
   
 volumes:
-  posts_db:
+  posts_db: {}
 
 networks:
-  net_frontend:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.1.1.0/24
+  net_frontend: {}
+    # driver: bridge
+    # ipam:
+      # driver: default
+      # config:
+        # - subnet: 10.1.1.0/24
 
-  net_backend:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.1.2.0/24
+  net_backend: {}
+    # driver: bridge
+    # ipam:
+      # driver: default
+      # config:
+        # - subnet: 10.1.2.0/24
