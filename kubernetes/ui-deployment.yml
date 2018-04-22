@@ -2,18 +2,18 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: post-deployment
+  name: ui-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: post
+      app: ui
   template:
     metadata:
-      name: post
+      name: ui
       labels:
-        app: post
+        app: ui
     spec:
       containers:
-      - image: brdm88/post
-        name: post
+      - image: brdm88/ui
+        name: ui

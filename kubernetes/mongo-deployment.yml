@@ -2,18 +2,18 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: post-deployment
+  name: mongo_db-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: post
+      app: mongo_db
   template:
     metadata:
-      name: post
+      name: mongo_db
       labels:
-        app: post
+        app: mongo_db
     spec:
       containers:
-      - image: brdm88/post
-        name: post
+      - image: mongo
+        name: mongo_db
