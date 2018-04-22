@@ -35,6 +35,10 @@ services:
 
   mongodb-exporter:
     image: ${USERNAME}/mongodb-exporter:${MONGODB_EXPORTER_VERSION:-latest}
+    deploy:
+      placement:
+        constraints:
+          - node.labels.reliability == high
     networks:
       - net_backend
     command: ["-mongodb.uri", "post_db"]
@@ -46,6 +50,8 @@ services:
 
   cadvisor:
     image: google/cadvisor:v0.29.0
+    deploy:
+      mode: global
     volumes:
       - '/:/rootfs:ro'
       - '/var/run:/var/run:rw'
