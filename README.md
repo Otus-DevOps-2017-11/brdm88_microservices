@@ -5,6 +5,9 @@ Dmitry Bredikhin microservice technology study repository
 Homework-29
 ===========
 
+На рабочую машину установлен Minikube версии 0.24.1 и запущен локальный кластер Kubernetes.
+
+Приложение Reddit развернуто и протестировано в локальном кластере.
 
 
 
