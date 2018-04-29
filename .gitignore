@@ -7,3 +7,9 @@ build_info.txt
 
 ## docker-compose
 .env
+
+## work config scripts
+scripts/
+
+## bugged code
+bugged*/
