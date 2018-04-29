@@ -1,15 +1,22 @@
-## prometheus
+## Prometheus
 build_info.txt
 #prometheus/
 
-## python specific
+## Python specific
 *.pyc
 
 ## docker-compose
 .env
 
-## work config scripts
+## Work config scripts
 scripts/
 
-## bugged code
+## Bugged code
 bugged*/
+
+## Terraform
+*.tfstate
+*.tfstate.*.backup
+*.tfstate.backup
+*.tfvars
+.terraform/

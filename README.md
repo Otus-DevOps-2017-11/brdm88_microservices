@@ -5,9 +5,26 @@ Dmitry Bredikhin microservice technology study repository
 Homework-29
 ===========
 
-На рабочую машину установлен Minikube версии 0.24.1 и запущен локальный кластер Kubernetes.
+##### Базовая часть
 
-Приложение Reddit развернуто и протестировано в локальном кластере.
+На рабочую машину установлен **Minikube** версии 0.24.1 и запущен локальный кластер Kubernetes. Kubectl был установлен ранее.
+
+Созданы манифесты для Deployment-ов и Service-ов компонент приложения Reddit, приложение развернуто в локальном кластере.
+
+Создан кластер Kubernetes в Google Kubernetes Engine, развернуто приложение Reddit.
+
+Опробовано использование Dashboard в GKE. При этом Service Account и конфигурация для запуска pod-а уже оказались настроены, вручную была 
+необходимость создать только clusterrolebinding с помощью соответствующей команды.
+
+`kubectl create clusterrolebinding kubernetes-dashboard  --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard`.
+
+
+##### Дополнительное задание
+
+Реализована конфигурация модуля **Terraform** для развертывания кластера GKE. Файлы конфигурации находятся в папке `kubernetes/terraform_gke`.
+
+YAML-манифесты для описания созданных сущностей для включения Dashboard находятся в папке `kubernetes/yml_dashboard`, манифесты были выгружены 
+с помощью `kubectl get` и параметра `-o yaml`.
 
 
 

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","k8s-app":"kubernetes-dashboard"},"name":"kubernetes-dashboard","namespace":"kube-system"}}
+  creationTimestamp: 2018-04-29T18:21:04Z
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+    k8s-app: kubernetes-dashboard
+  name: kubernetes-dashboard
+  namespace: kube-system
+  resourceVersion: "313"
+  selfLink: /api/v1/namespaces/kube-system/serviceaccounts/kubernetes-dashboard
+  uid: 13ebc791-4bda-11e8-ab7f-42010aa40071
+secrets:
+- name: kubernetes-dashboard-token-7h74q

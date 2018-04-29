@@ -1,0 +1,10 @@
+project = "project-111111"
+region = "europe-west4"
+region_zone = "europe-west4-b"
+
+cluster_name = "kuber-reddit"
+gke_min_version = "1.8.8-gke.0"
+nodes_count = 3
+node_machine_type = "g1-small"
+node_disk_size_gb = 20
+enable_dashboard = true
