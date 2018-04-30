@@ -20,3 +20,7 @@ bugged*/
 *.tfstate.backup
 *.tfvars
 .terraform/
+
+## TLS
+*.crt
+*.key
