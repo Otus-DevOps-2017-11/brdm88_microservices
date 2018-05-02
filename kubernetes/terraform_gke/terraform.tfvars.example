@@ -8,3 +8,4 @@ nodes_count = 3
 node_machine_type = "g1-small"
 node_disk_size_gb = 20
 enable_dashboard = true
+enable_legacy_abac = true

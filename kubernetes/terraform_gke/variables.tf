@@ -40,3 +40,8 @@ variable enable_dashboard {
   description = "Enable Kubernetes Dashboard flag"
   default     = false
 }
+
+variable enable_legacy_abac {
+  description = "Enable Legacy Authorization"
+  default     = false
+}

@@ -6,7 +6,7 @@ resource "google_container_cluster" "primary" {
   initial_node_count = "${var.nodes_count}"
   min_master_version = "${var.gke_min_version}"
   node_version       = "${var.gke_min_version}"
-  enable_legacy_abac = false
+  enable_legacy_abac = "${var.enable_legacy_abac}"
 
   master_auth {
     username = ""
