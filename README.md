@@ -5,6 +5,67 @@ Dmitry Bredikhin microservice technology study repository
 Homework-32
 ===========
 
+##### Базовая часть
+
+Подготовлен кластер Kubernetes и рабочее окружение.
+
+
+###### Мониторинг
+
+С помощью Helm установлены nginx-ingress и prometheus.
+```
+helm install stable/nginx-ingress --name nginx
+
+helm upgrade prom . -f custom_values.yaml --install
+
+helm upgrade reddit-test ./reddit --install
+helm upgrade staging --namespace staging ./reddit --install
+helm upgrade production --namespace production ./reddit --install
+```
+
+Изучен Service Discovery и метрики **cAdvisor**. 
+
+Запущены сервисы **kube-state-metrics** и **node-exporter**.
+
+Сконфигурирован job в Prometheus для сбора метрик сервисов приложения, далее он разбит на отдельные job-ы для каждого сервиса.
+
+
+###### Визуализация
+
+С помощью Helm установлена **Grafana**.
+```
+helm upgrade --install grafana stable/grafana \
+--set "server.adminPassword=admin" \
+--set "server.service.type=NodePort" \
+--set "server.ingress.enabled=true" \
+--set "server.ingress.hosts={reddit-grafana}"
+```
+
+Сконфигурированы dashboard-ы для отображения данных мониторинга интерфейса приложения и бизнес-логики.
+Настроена параметризация графиков для разделения данных по окружениям.
+
+
+###### Логирование
+
+Развернут EFK-стек на ноде класса `n1-standard-2`.
+```
+kubectl apply -f ./efk
+
+helm upgrade --install kibana stable/kibana \
+--set "ingress.enabled=true" \
+--set "ingress.hosts={reddit-kibana}" \
+--set "env.ELASTICSEARCH_URL=http://elasticsearch-logging:9200" \
+--version 0.1.1
+```
+
+Изучено
+
+
+##### Дополнительные задания
+
+1. Настроен **Alertmanager**
+
+2. На основе манифестов созданы Helm Chart-ы для установки компонентов EFK-стека. Chart-ы находятся в папке `kubernetes/Charts/efk`
 
 
 ----
