@@ -30,6 +30,7 @@ bugged*/
 
 ## Charts .gz archives
 kubernetes/Charts/reddit/charts/*
+kubernetes/Charts/efk/efk-stack/charts/*
 
 ## GitLab CI Work dir
 kubernetes/Gitlab_ci/*

@@ -54,8 +54,8 @@ alertmanager:
     ## alertmanager Ingress hostnames
     ## Must be provided if Ingress is enabled
     ##
-    hosts: []
-    #   - alertmanager.domain.com
+    hosts:
+     - reddit-alertmanager
 
     ## alertmanager Ingress TLS configuration
     ## Secrets must be manually created in the namespace
@@ -147,7 +147,7 @@ alertmanager:
 
     loadBalancerIP: ""
     loadBalancerSourceRanges: []
-    servicePort: 80
+    servicePort: 9093
     # nodePort: 30000
     type: ClusterIP
 
@@ -569,30 +569,56 @@ pushgateway:
 alertmanagerFiles:
   alertmanager.yml: |-
     global:
-      # slack_api_url: ''
+      slack_api_url: 'https://hooks.slack.com/services/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'
 
     receivers:
-      - name: default-receiver
-        # slack_configs:
-        #  - channel: '@you'
-        #    send_resolved: true
+    - name: default-receiver
+      slack_configs:
+      - channel: '#dmitry-bredikhin'
+        send_resolved: true
 
     route:
       group_wait: 10s
-      group_interval: 5m
+      group_interval: 1m
       receiver: default-receiver
       repeat_interval: 3h
 
 ## Prometheus server ConfigMap entries
 ##
 serverFiles:
-  alerts: {}
+  alerts:
+    groups:
+    - name: alert.rules
+      rules:
+      - alert: Kubernetes API Server Down
+        expr: up{job="kubernetes-apiservers"} == 0
+        for: 1m
+        labels:
+          severity: page
+        annotations:
+          description: 'Kubernetes API Server has been down for more than 1 minute'
+
+      - alert: Kubernetes Node Issue
+        expr: kube_node_status_condition{status!="false",condition!="Ready"} == 1
+        for: 1m
+        labels:
+          severity: page
+        annotations:
+          description: 'Kubernetes Node {{ $labels.node }} is not OK - {{ $labels.condition }} issue'
+
   rules: {}
 
   prometheus.yml:
     rule_files:
       - /etc/config/rules
       - /etc/config/alerts
+
+    alerting:
+      alertmanagers:
+        - scheme: http
+          static_configs:
+            - targets:
+              - "prom-prometheus-alertmanager:9093"
 
     global:
       scrape_interval: 30s
@@ -860,22 +886,6 @@ serverFiles:
             target_label: kubernetes_namespace
           - source_labels: [__meta_kubernetes_service_name]
             action: replace
-            target_label: kubernetes_name
-
-      - job_name: 'reddit-production'
-
-        kubernetes_sd_configs:
-          - role: endpoints
-           
-        relabel_configs:
-          - action: labelmap
-            regex: __meta_kubernetes_service_label_(.+)
-          - source_labels: [__meta_kubernetes_service_label_app, __meta_kubernetes_namespace]
-            action: keep
-            regex: reddit;(production|staging)+
-          - source_labels: [__meta_kubernetes_namespace]
-            target_label: kubernetes_namespace
-          - source_labels: [__meta_kubernetes_service_name]
             target_label: kubernetes_name
 
 networkPolicy:

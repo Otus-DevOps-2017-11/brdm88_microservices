@@ -33,6 +33,8 @@ helm upgrade production --namespace production ./reddit --install
 ###### Визуализация
 
 С помощью Helm установлена **Grafana**.
+
+При попытке установки с помощью следующей команды:
 ```
 helm upgrade --install grafana stable/grafana \
 --set "server.adminPassword=admin" \
@@ -40,15 +42,25 @@ helm upgrade --install grafana stable/grafana \
 --set "server.ingress.enabled=true" \
 --set "server.ingress.hosts={reddit-grafana}"
 ```
+тип сервиса оставался ClusterIP и соответственно не было доступа извне, в итоге установка была произведена из предварительно 
+загруженного и сконфигурированного локально Chart-а (находится в папке `kubernetes/Charts`).
 
-Сконфигурированы dashboard-ы для отображения данных мониторинга интерфейса приложения и бизнес-логики.
-Настроена параметризация графиков для разделения данных по окружениям.
+Сконфигурированы dashboard-ы для отображения данных мониторинга кластера Kubernetes, а также интерфейса приложения и бизнес-логики.
+
+Настроена параметризация графиков метрик приложения для группировки данных по окружениям.
+
+P.S. Отмечу, что в презентации была выявлена неточность: в примере на слайде 44 верным выражением для параметризации запроса 
+является `{kubernetes_namespace=~"$namespace"}`.
+
+Dashboard-ы выгружены в папку `kubernetes/monitoring/grafana-dashboards`.
 
 
 ###### Логирование
 
-Развернут EFK-стек на ноде класса `n1-standard-2`.
+Развернут EFK-стек.
 ```
+kubectl label node gke-kuber-logmon-powerful-pool-4a650a8a-2kvb elastichost=true
+
 kubectl apply -f ./efk
 
 helm upgrade --install kibana stable/kibana \
@@ -58,14 +70,15 @@ helm upgrade --install kibana stable/kibana \
 --version 0.1.1
 ```
 
-Изучено
+Рассмотрена работа с данными в Kibana.
 
 
 ##### Дополнительные задания
 
-1. Настроен **Alertmanager**
+1. Настроены alert-ы на контроль доступности k8s api-сервера состояния хостов (через `custom_values.yaml`), запущен **Alertmanager** 
+и настроена нотификация в персональный Slack-канал.
 
-2. На основе манифестов созданы Helm Chart-ы для установки компонентов EFK-стека. Chart-ы находятся в папке `kubernetes/Charts/efk`
+2. На основе манифестов созданы Helm Chart-ы для установки EFK-стека. Chart-ы находятся в папке `kubernetes/Charts/efk`.
 
 
 ----

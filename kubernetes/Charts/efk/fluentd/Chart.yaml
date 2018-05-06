@@ -1,0 +1,8 @@
+---
+name: fluentd
+version: 1.0.0
+description: Fluentd Chart
+maintainers:
+  - name: Dmitry Bredikhin
+    email: brdm88@gmail.com
+appVersion: 1.0

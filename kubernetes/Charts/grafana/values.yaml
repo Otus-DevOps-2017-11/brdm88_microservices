@@ -73,14 +73,15 @@ affinity: {}
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
 persistence:
-  enabled: false
-  # storageClassName: default
-  # accessModes:
-  #   - ReadWriteOnce
-  # size: 10Gi
-  # annotations: {}
-  # subPath: ""
-  # existingClaim:
+  enabled: true
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  size: 2Gi
+  annotations: {}
+  subPath: ""
+  existingClaim:
+  #mountPath: /var/lib/grafana/data
 
 adminUser: admin
 adminPassword: admin
