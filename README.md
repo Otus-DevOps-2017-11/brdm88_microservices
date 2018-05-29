@@ -2,6 +2,34 @@
 Dmitry Bredikhin microservice technology study repository
 
 
+Homework-28
+===========
+
+В рамках данной работы были выполнены задания туториала "Kubernetes The Hard way". 
+Стоит отметить, что для корректной работы **etcd** потребовалось явно указать адреса хостов кластера в секции `hosts` в файле `kubernetes-csr.json` 
+перед генерацией сертификата для Kubernetes API Server.
+
+Созданы базовые конфигурации Deployment-ов для сервисов приложения Reddit, проверен запуск pod-ов.
+```
+#> kubectl get pods
+NAME                                  READY     STATUS      RESTARTS   AGE
+busybox-6f748d598-87zfr               0/1       Completed   15         4h
+comment-deployment-ddb7b8849-v5g6l    1/1       Running     0          4h
+mongodb-deployment-55f5c67574-5qkhz   1/1       Running     0          4h
+nginx-8586cf59-p8jfr                  1/1       Running     0          4h
+post-deployment-5b8fc5457c-8dpxw      1/1       Running     0          4h
+ui-deployment-67d496cdb5-fq958        1/1       Running     0          4h
+```
+
+После проведения тестов кластер был удален.
+Файлы конфигурации и ключи, созданные при прохождении туториала, помещены в папку `kubernetes/kubernetes_the_hard_way`.
+
+Файл `commands.sh` содержит рабочий список команд, выполнявшихся при развертывании кластера.
+
+
+----
+----
+
 
 Homework-27
 ===========
@@ -30,7 +58,6 @@ Homework-27
 
 ----
 ----
-
 
 
 Homework-25
