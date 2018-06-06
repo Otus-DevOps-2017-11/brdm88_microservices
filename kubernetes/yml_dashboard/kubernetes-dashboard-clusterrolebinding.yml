@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  creationTimestamp: 2018-04-29T18:39:07Z
+  name: kubernetes-dashboard
+  resourceVersion: "2078"
+  selfLink: /apis/rbac.authorization.k8s.io/v1/clusterrolebindings/kubernetes-dashboard
+  uid: 99961118-4bdc-11e8-ab7f-42010aa40071
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: kubernetes-dashboard
+  namespace: kube-system
