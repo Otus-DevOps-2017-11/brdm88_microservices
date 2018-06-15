@@ -2,6 +2,89 @@
 Dmitry Bredikhin microservice technology study repository
 
 
+Homework-32
+===========
+
+##### Базовая часть
+
+Подготовлен кластер Kubernetes и рабочее окружение.
+
+
+###### Мониторинг
+
+С помощью Helm установлены nginx-ingress и prometheus.
+```
+helm install stable/nginx-ingress --name nginx
+
+helm upgrade prom . -f custom_values.yaml --install
+
+helm upgrade reddit-test ./reddit --install
+helm upgrade staging --namespace staging ./reddit --install
+helm upgrade production --namespace production ./reddit --install
+```
+
+Изучен Service Discovery и метрики **cAdvisor**. 
+
+Запущены сервисы **kube-state-metrics** и **node-exporter**.
+
+Сконфигурирован job в Prometheus для сбора метрик сервисов приложения, далее он разбит на отдельные job-ы для каждого сервиса.
+
+
+###### Визуализация
+
+С помощью Helm установлена **Grafana**.
+
+При попытке установки с помощью следующей команды:
+```
+helm upgrade --install grafana stable/grafana \
+--set "server.adminPassword=admin" \
+--set "server.service.type=NodePort" \
+--set "server.ingress.enabled=true" \
+--set "server.ingress.hosts={reddit-grafana}"
+```
+тип сервиса оставался ClusterIP и соответственно не было доступа извне, в итоге установка была произведена из предварительно 
+загруженного и сконфигурированного локально Chart-а (находится в папке `kubernetes/Charts`).
+
+Сконфигурированы dashboard-ы для отображения данных мониторинга кластера Kubernetes, а также интерфейса приложения и бизнес-логики.
+
+Настроена параметризация графиков метрик приложения для группировки данных по окружениям.
+
+P.S. Отмечу, что в презентации была выявлена неточность: в примере на слайде 44 верным выражением для параметризации запроса 
+является `{kubernetes_namespace=~"$namespace"}`.
+
+Dashboard-ы выгружены в папку `kubernetes/monitoring/grafana-dashboards`.
+
+
+###### Логирование
+
+Развернут EFK-стек.
+```
+kubectl label node gke-kuber-logmon-powerful-pool-4a650a8a-2kvb elastichost=true
+
+kubectl apply -f ./efk
+
+helm upgrade --install kibana stable/kibana \
+--set "ingress.enabled=true" \
+--set "ingress.hosts={reddit-kibana}" \
+--set "env.ELASTICSEARCH_URL=http://elasticsearch-logging:9200" \
+--version 0.1.1
+```
+
+Рассмотрена работа с данными в Kibana.
+
+
+##### Дополнительные задания
+
+1. Настроены alert-ы на контроль доступности k8s api-сервера состояния хостов (через `custom_values.yaml`), запущен **Alertmanager** 
+и настроена нотификация в персональный Slack-канал.
+
+2. На основе манифестов созданы Helm Chart-ы для установки EFK-стека. Chart-ы находятся в папке `kubernetes/Charts/efk`.
+
+
+----
+----
+
+
 Homework-31
 ===========
 
