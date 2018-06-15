@@ -1,5 +1,62 @@
-# brdm88_microservices
+﻿# brdm88_microservices
 Dmitry Bredikhin microservice technology study repository
+
+
+Homework-30
+===========
+
+###### 1. Сетевое взаимодействие
+
+Рассмотрена работа **kube-dns**.
+
+Сервис **ui** реконфигурирован в тип LoadBalancer, опробована работа приложения через балансировщик.
+
+Создан Ingress для сервиса **ui**, обробована работа встроенного в GKE Ingress Controller-a в качестве L7-балансировщика.
+
+После, тип сервиса **ui** был изменен на NodePort, перенастроен Ingress, протестирована работа приложения.
+
+Для приложения Reddit настроена терминация TLS.
+ * создан TLS сертификат и k8s-объект `secret`
+ * Ingress перенастроен на прием только HTTPS трафика (для корректного применения изменений пришлось пересоздать Ingress)
+
+Листинг команд:
+```
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=35.186.216.99"
+kubectl -n dev create secret tls ui-ingress --key tls.key --cert tls.crt
+kubectl -n dev describe secret ui-ingress
+kubectl -n dev delete ingress ui
+kubectl -n dev apply -f ui-ingress.yml
+```
+
+Протестирована работа Network Policy.
+ * Включены beta-компоненты GCP и активирован функционал NetworkPolicy
+ * Создан манифест, описывающий объект `NetworkPolicy`
+
+Листинг команд:
+```
+gcloud beta container clusters list
+gcloud beta container clusters update kuber-reddit --zone=europe-west4-b --update-addons=NetworkPolicy=ENABLED
+gcloud beta container clusters update kuber-reddit --zone=europe-west4-b --enable-network-policy
+
+kubectl -n dev apply -f mongo-network-policy.yml
+```
+Проверена работа приложения. Стоит заметить, что при применении Network Policy пересоздались затрагиваемые ею pod-ы.
+YAML-манифест объекта Secret добавлен в папку манифестов приложения (файл `ui-secret-ingress.yml`).
+
+
+###### 2. Хранилища данных
+
+Создан диск в Google Cloud (`gcloud compute disks create --size=25GB --zone=europe-west4-b reddit-mongo-disk`), в Deployment для MongoDB 
+добавлен Volume типа `gcePersistentDisk`, протестировано сохранение данных после пересоздания pod-а с СУБД.
+
+Рассмотрен механизм **PersistentVolume**. 
+Созданы манифесты для сущностей классов `PersistentVolume` и `PersistentVolumeClaim`.
+
+Создан манифест для StorageClass, предусматривающего использование SSD-дисков в GCP. Описан PersistentVolumeClaim для этого StorageClass.
+
+
+----
+----
 
 
 Homework-29
